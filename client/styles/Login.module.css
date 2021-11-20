@@ -1,0 +1,37 @@
+
+.label {
+    text-align: left;
+    font-size: 17px;
+  }
+  .login-text {
+    font-size: 30px;
+    padding-top: 20px;
+  }
+  .login {
+    display: block;
+    background-color: #d3d5d4;
+    margin: 2rem 0 4rem 0;
+    padding: 1rem;
+    padding-top: 0;
+    position: relative;
+    min-width: 10%;
+    width: 40%;
+    text-align: left;
+    margin: 0;
+    margin-bottom: 1rem;
+    color: #7f898d;
+    border: 1px solid #9c9c9c;
+    border-radius: 7px;
+  }
+  .text-left {
+    padding-right: 1rem;
+  }
+  .align_center {
+    margin: 0 auto;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background-color: grey;
+  }

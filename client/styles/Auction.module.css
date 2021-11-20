@@ -1,0 +1,41 @@
+.tagAuction{
+    height: 618px;
+    width: 97%;
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    grid-template-rows: 1fr;
+    gap: 10px 10px;
+    grid-template-areas: '. .';
+    margin: 60px auto;
+    background: #fff;
+    padding: 0;
+    border-radius: 7px;
+    overflow: hidden;
+}
+
+.auctionList{
+    max-height: 100%;
+    background-color: #f9fcfb;
+    overflow: hidden;
+}
+.auction{
+
+    border-style: solid;
+    border-color: grey;
+    display: flex;
+    padding: 10px 15px;
+    text-decoration: none;
+    vertical-align: baseline;
+    color: black;
+    height: 20%;
+}
+.picture{
+    border-style: solid;
+    border-color: grey;
+    display: flex;
+    padding: 10px 15px;
+    text-decoration: none;
+    color: black;
+    height: 100%;
+    width: 15%;
+}

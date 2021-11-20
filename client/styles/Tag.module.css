@@ -1,0 +1,6 @@
+.tag {
+    border-right: 1px solid #2a2827;
+    max-height: inherit;
+    background-color: #d3d5d4;
+    overflow: hidden;
+  }
