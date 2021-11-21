@@ -5,11 +5,14 @@ import { text } from 'dom-helpers';
 import { useState } from 'react';
 import Axios from 'axios';
 import {useRouter} from 'next/router';
+import { useEffect } from "react";
+import Link from 'next/link'
 
 
 const Login = () => {
     const [email, setEmail ] = useState('');
     const [password, setPassword ] = useState('');
+
     const router = useRouter();
 
     const loginUser = (e) =>{
@@ -18,12 +21,12 @@ const Login = () => {
                 email : email,
                 password : password
             }).then((response =>{
-                alert(response.data.message);
-                console.log(response);
-
+                localStorage.setItem("token", response.data.token);
+                console.log(response.data);
+                console.log(localStorage.getItem("token"));
                 setEmail('');
                 setPassword('');
-                // router.push('/');
+                router.push('/');
             })).catch(err => {
                 // what now?
                 alert(err.response.data.message);
@@ -31,6 +34,11 @@ const Login = () => {
             });
        
     }
+
+    useEffect(() => {
+        localStorage.setItem("token",'');
+      }, [])
+    
 
     return (
         <div className={styles.align_center}>
@@ -50,6 +58,7 @@ const Login = () => {
                 <Button variant="primary" type="submit" >
                     Submit
                 </Button>
+                <Link href="/register">Register here</Link>
             </Form>
             </div>
         </div>

@@ -1,9 +1,12 @@
 import styles from "../styles/Tag.module.css"
+import TagItem from "./TagItem";
 
-const TagList = () => {
+const TagList = ({tagList}) => {
     return ( 
         <div className={styles.tag}>
-            TagList
+            {tagList.map((tag)=>(
+                <TagItem name = {tag.name} key={tag.TagID}></TagItem>
+            ))}
         </div>
      );
 }

@@ -1,29 +1,31 @@
 const bcrypt = require("bcryptjs");
-const db = require("../config/db").db;
+const db = require("../config/db");
+const jwt = require("jsonwebtoken");
+const utils = require("../utils");
+require("dotenv").config();
 
 const registerUser = async (req,res) => {
     try {
         if( !validateRegisterData(req.body))
             res.status(400).json({message: "all inputs must be valid"}) 
-       if(! await emailExistsinDB(req.body.email))
-       {
-        pass = await encryptPass(req.body.password);
-        db.query('INSERT INTO user (email, username, password) values (?,?,?)',[req.body.email, req.body.username, pass], (err,result) =>{
-            if(err)
-                {
-                    res.status(500).json(err.message);
-                    console.log(err.message);
-                }
-                res.status(200).json({message:"account created succesfully"});
-        })
-       }
-       else
-       {
-           res.status(400).json({message: "this email was already used for creating an account"})
-       }
+        else
+        {
+            if(! await emailExistsinDB(req.body.email))
+            {
+                pass = await encryptPass(req.body.password);
+                result = await utils.insert("user",["email","username","password"],[req.body.email,req.body.username,pass]);
+                if(result)
+                    res.status(200).json({message : "account created succesfully"});
+                else
+                    res.status(500).json({message : "account creation failed"});
+            }        
+            else
+            {
+                res.status(400).json({message: "this email was already used for creating an account"})
+            }
+        }
     } catch (err) {
         console.log(err);
-        res.status(400).json(err.message);
     }
 }
 const loginUser = async (req,res) => {
@@ -32,10 +34,15 @@ const loginUser = async (req,res) => {
             res.status(400).json({message: "all inputs must be valid"});
         else
         {
-            const user= await getUser(req.body.email);
-            console.log(user);
+            const user = await utils.findByField("user","email",req.body.email);
+            const id = user[0].UserID;
             if(user.length !== 0 && (await bcrypt.compare(req.body.password,user[0].password)))
-                res.status(200).json({message:"ok"})
+            {
+                const token = jwt.sign({id}, process.env.SECRET, {
+                    expiresIn:86400
+                })
+                res.status(200).json({auth:true, token:token});
+            }
             else
                 res.status(400).json({message:"incorect password or the account doesn't exist"})
         }  
@@ -77,20 +84,14 @@ const validateRegisterData = (data)=>{
     return true;
 }
 const emailExistsinDB = async (email)=>{
-    const user = await getUser(email);
+    const user = await utils.findByField('user','email',email)
     if(user.length === 0)
         return false
     return true;
 }
-const getUser =  (email) =>{
-     return new Promise((resolve, reject) => {
-         db.query("SELECT * FROM user WHERE email = ?",[email], (error, results) => {
-             if(error) {
-                 reject(error);
-             }
-             resolve(results);
-         });
-});
+const getUserInfo =  async (req,res) => {
+    const user = await utils.findByField('user','UserID',req.userID);
+    res.status(200).json(user);
 }
 async function encryptPass(pass) {
     key = await bcrypt.hash(pass,10);  
@@ -99,5 +100,6 @@ async function encryptPass(pass) {
 module.exports = {
     registerUser,
     getAllUsers,
-    loginUser
+    loginUser,
+    getUserInfo
 }
