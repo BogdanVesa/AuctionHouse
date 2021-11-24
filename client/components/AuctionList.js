@@ -1,10 +1,12 @@
 import styles from "../styles/Auction.module.css"
 import Auction from "./Auction";
 
-const AuctionList = () => {
+const AuctionList = ({postList}) => {
     return ( 
         <div className={styles.auctionList}>
-            <Auction/>
+            {postList.map((post)=>(
+                <Auction post={post}></Auction>
+            ))}
         </div>
      );
 }

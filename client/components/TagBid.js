@@ -2,11 +2,11 @@ import AuctionList from "./AuctionList";
 import TagList from "./TagList";
 import styles from "../styles/Auction.module.css"
 
-const TagBid = () => {
+const TagBid = ({tagList, postList}) => {
     return ( 
         <div className={styles.tagAuction}>
-            <TagList/>
-            <AuctionList/>
+            <TagList tagList={tagList}/>
+            <AuctionList postList={postList}/>
         </div>
      );
 }

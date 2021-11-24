@@ -16,18 +16,18 @@
 .auctionList{
     max-height: 100%;
     background-color: #f9fcfb;
-    overflow: hidden;
+    overflow: auto;
 }
 .auction{
-
     border-style: solid;
     border-color: grey;
     display: flex;
+    align-content: space-between;
     padding: 10px 15px;
     text-decoration: none;
-    vertical-align: baseline;
     color: black;
     height: 20%;
+    margin-bottom: 2px;
 }
 .picture{
     border-style: solid;
@@ -38,4 +38,14 @@
     color: black;
     height: 100%;
     width: 15%;
+    margin-right: 5px;
+}
+.description{
+    display: flex;
+    align-items: flex-start;
+}
+.priceDate{
+    display: flex;
+    align-items: flex-end;
+    margin-left: auto;
 }

@@ -2,6 +2,8 @@ require("dotenv").config();
 const express = require("express");
 const db = require("./config/db.js").db;
 const users = require("./routes/userRoutes")
+const tags = require("./routes/tagsRoutes");
+const posts = require("./routes/postRoutes")
 const app = express();
 const cors = require("cors");
 app.use(express.json());
@@ -9,6 +11,9 @@ app.use(cors({
     origin: "http://localhost:3000"
 }));
 app.use("/auth", users);
+app.use("/posts",posts);
+app.use(tags);
+
 
 // app.use(function (req, res , next){
 //     res.header("Access-Control-Allow-Origin", "*");
