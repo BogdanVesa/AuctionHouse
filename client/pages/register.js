@@ -5,6 +5,7 @@ import { text } from 'dom-helpers';
 import { useState } from 'react';
 import Axios from 'axios';
 import {useRouter} from 'next/router';
+import { useEffect } from "react";
 
 const Register = () => {
     const [email, setEmail ] = useState('');
@@ -13,11 +14,15 @@ const Register = () => {
     const [username, setUsername] = useState('');
     const router = useRouter();
 
+    useEffect(() => {
+        localStorage.setItem("token",'');
+      }, [])
+
 
     const registerUser = (e) =>{
         e.preventDefault();
-        const validateStatus = validateData(email, username, password, confirmed); 
-        if( validateStatus === 0){
+        const validationError = validateData(email, username, password, confirmed); 
+        if(validationError ==""){
             Axios.post('http://localhost:3001/auth/register',{
                 email : email,
                 username : username,
@@ -29,29 +34,20 @@ const Register = () => {
                 console.log(err);
             });
         }
-        else if(validateStatus === 1){
-            alert("Email was incorrect");
-        }
-        else if(validateStatus === 2){
-            alert("Username must be longer than 5 characters");
-        }
-        else if(validateStatus === 3){
-            alert("Password must be longer than 5 characters");
-        }
-        else{
-            alert("Password and confirm password doesn't match");
-        }
+        else
+            alert(validationError);
     }
     const validateData = (email,username,password,confirmed) =>{
+        const s=""
         if(!email || email.length < 5 || !(email.includes('@')))
-            return 1;
+            s+="Email was incorrect\n"
         if(!username ||username.length < 5)
-            return 2;
+            s+="Username must be longer than 5 characters\n"
         if(!password  || password.length < 5)  
-            return 3 ; 
+            s+="Password must be longer than 5 characters\n"
         if(!confirmed || password !== confirmed)
-            return 4;
-        return 0;
+            s+="Password and confirm password doesn't match\n"
+       return s;
     }
 
     return (  

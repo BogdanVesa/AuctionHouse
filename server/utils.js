@@ -18,7 +18,7 @@ const insert = async (table,fields,values) =>{
                     console.log(err)
                     reject(false);
                 }
-            resolve(true);
+            resolve(result);
         })
     })
 }
@@ -36,4 +36,18 @@ const getAllRows = async (table,fields) => {
         
     })
 }
-module.exports={findByField,insert,getAllRows};
+const getAllRowsWhere = async (table,fields,conditionField,value) =>
+{
+    return new Promise ((resolve,reject) => {
+        var query = db.query("SELECT ?? FROM ?? WHERE ?? = ?",[fields,table,conditionField,value],(err,result) => {
+            if(err)
+            {
+                console.log(err);
+                reject(err);
+            }
+            resolve(result);
+        })
+
+    })
+}
+module.exports={findByField,insert,getAllRows,getAllRowsWhere}

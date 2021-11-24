@@ -5,6 +5,7 @@ import { Col } from "react-bootstrap";
 import {useState} from "react";
 import { useEffect } from "react";
 import Axios from 'axios';
+import {useRouter} from 'next/router';
 
 
 const Navbar = () => {
@@ -13,6 +14,7 @@ const Navbar = () => {
         backgroundColor: "grey",
     }
     const [username, setUsername] = useState("");
+    const router = useRouter();
 
     const getUsername = () =>{
         Axios.get("http://localhost:3001/auth/getUserInfo", {headers : {
@@ -24,16 +26,28 @@ const Navbar = () => {
         });
     }
 
+    const toCreatePost = () =>{
+        router.push("/createPost");
+    }
+
+    const toHome = () =>{
+        router.push("/");
+    }
+
+
     useEffect(() => {
+        if(localStorage.getItem("token") === ''){
+            router.push("/login")
+        }
         getUsername();
       }, [])
 
     return (
         <Row style={mystyle}>
             <Col sm={4}>      
-                <Button variant="secondary" size="sm">Home</Button>{' '}
+                <Button variant="secondary" size="sm" onClick={toHome}>Home</Button>{' '}
                 <Button variant="secondary" size="sm">Your bids</Button>{' '}
-                <Button variant="secondary" size="sm">Create bid</Button>{' '}
+                <Button variant="secondary" size="sm" onClick={toCreatePost}>Create bid</Button>{' '}
             </Col>
             <Col sm={{ span: 4, offset: 4 }}>
                 <h3 style={{textAlign : "right", fontSize : "17px", paddingRight:"10px"}} > {username} Balance: $0.0 </h3>

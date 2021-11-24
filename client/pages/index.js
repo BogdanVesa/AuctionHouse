@@ -9,14 +9,17 @@ import TagBid from '../components/TagBid'
 import { useEffect } from 'react'
 import { useState } from 'react'
 import Axios from 'axios'
+import { Button } from 'react-bootstrap'
 
 export default function Home() {
 
   useEffect(() => {
     getTaglist();
+    getAllPosts();
   }, [])
 
   const [tagList,setTagList] = useState([]);
+  const [postList,setPostList] = useState([]);
 
   const getTaglist =() =>{
     Axios.get("http://localhost:3001/allTags").then((response =>{
@@ -25,13 +28,20 @@ export default function Home() {
     }));
   }
 
+  const getAllPosts =()=>{
+    Axios.get("http://localhost:3001/posts/getPosts").then((response =>{
+      console.log(response.data);
+      setPostList(response.data);
+    }))
+  }
+
 
   return (
     <div>
       <Navbar/>
       <br/>
       <SearchBar />
-      <TagBid tagList={tagList} />
+      <TagBid tagList={tagList} postList={postList}/>
     </div>
   )
 }
