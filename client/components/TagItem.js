@@ -1,5 +1,6 @@
 import { Form } from "react-bootstrap";
 import { useState } from "react";
+import styles from "../styles/Tag.module.css"
 
 const TagItem = ({name, onAdd, onRemove}) => {
     const[state, setState] = useState(false);
@@ -17,8 +18,8 @@ const TagItem = ({name, onAdd, onRemove}) => {
     }
 
     return ( 
-        <div>
-            <Form.Check 
+        <div className={styles.tagItem}>
+            <Form.Check
             checked={state}
             type='checkbox'
             label={name}

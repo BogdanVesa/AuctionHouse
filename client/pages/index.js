@@ -1,10 +1,6 @@
-import Head from 'next/head'
-import Image from 'next/image'
 import styles from '../styles/Home.module.css'
-import MainPage from '../components/MainPage'
 import Navbar from '../components/Navbar'
 import SearchBar from '../components/SearchBar'
-import AuctionList from '../components/AuctionList'
 import TagBid from '../components/TagBid'
 import { useEffect } from 'react'
 import { useState } from 'react'
@@ -35,13 +31,39 @@ export default function Home() {
     }))
   }
 
+  const [addTag, setAddTag] = useState([]);
+
+  const addTagPost =(name)=>{
+    if(!addTag.includes(name))
+        setAddTag([...addTag, name]);
+  }
+
+  const removeTagPost=(name)=>{
+      if(addTag.includes(name))
+      {
+          const addTagCopy = [...addTag];
+          setAddTag(addTag.filter((t) => {
+              return  t !== name
+          }))
+      }
+  }
+
+  const searchPost =(name)=>{
+    Axios.get("http://localhost:3001/posts/getPosts",{params : {
+      description : name,
+      tags : addTag
+    }}).then((response =>{
+      console.log(response.data)
+      setPostList(response.data)
+    }))
+  }
 
   return (
     <div>
       <Navbar/>
       <br/>
-      <SearchBar />
-      <TagBid tagList={tagList} postList={postList}/>
+      <SearchBar searchPost={searchPost}/>
+      <TagBid tagList={tagList} postList={postList} onAdd={addTagPost} onRemove={removeTagPost}/>
     </div>
   )
 }

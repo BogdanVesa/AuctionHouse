@@ -3,7 +3,7 @@ import TagItem from "./TagItem";
 
 const TagList = ({tagList, onAdd, onRemove}) => {
     return ( 
-        <div className={styles.tag}>
+        <div className={styles.tagList}>
             {tagList.map((tag)=>(
                 <TagItem name = {tag.name} key={tag.name} onAdd={onAdd} onRemove={onRemove}></TagItem>
             ))}

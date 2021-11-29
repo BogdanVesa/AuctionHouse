@@ -1,0 +1,9 @@
+.nav{
+    float: right;
+}
+.navbar{
+    height: 40px;
+    background-color: grey;
+    overflow: hidden;
+    color: white;
+}

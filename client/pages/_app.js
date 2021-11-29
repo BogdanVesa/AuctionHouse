@@ -3,6 +3,7 @@ import '../styles/globals.css';
 import { useEffect } from "react";
 import { Navbar } from 'react-bootstrap';
 
+
 function MyApp({ Component, pageProps }) {
   useEffect(() => {
     import("bootstrap/dist/js/bootstrap");
