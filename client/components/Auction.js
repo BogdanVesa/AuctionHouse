@@ -7,7 +7,11 @@ const Auction = ({post}) => {
     <div className={styles.auction}>
         <Picture/>
         <div className={styles.description}>{post.description}</div> 
-        <div className={styles.priceDate}>{format(Date.parse(post.endTime), 'd.MM.Y H:m')} ${post.currentPrice}</div>
+        <div className={styles.priceDate}>
+            <div>Ends at:</div>
+            <div>{format(Date.parse(post.endTime), 'd.MM.Y H:m')}</div> 
+            <div>Price: ${post.currentPrice}</div>
+            </div>
     </div>
     );
 }

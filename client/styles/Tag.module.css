@@ -1,6 +1,28 @@
-.tag {
-    border-right: 1px solid #2a2827;
-    max-height: inherit;
-    background-color: #d3d5d4;
-    overflow: hidden;
-  }
+.tagList{
+  max-height: 100%;
+  padding: 15px 15px 15px 15px;
+  border-style: solid;
+  border-color: grey;
+  border-radius: 10px;
+  overflow: auto;
+  background-color: #4C4B63;
+  font-size: 20px;
+  font-family: 'Lucida Bright';
+}
+.tagItem{
+    border-style: solid;
+    border-color: grey;
+    border-radius: 10px;
+    display: flex;
+    align-content: flex-start;
+    padding: 10px 15px;
+    text-decoration: none;
+    color: black;
+    height: 10%;
+    margin-bottom: 15px;
+    background-color: #E36D3B;
+    align-items: center;
+}
+.checkBox{
+  padding: 20px 20px 20px 20px;
+}

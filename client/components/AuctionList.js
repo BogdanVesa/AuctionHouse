@@ -5,7 +5,7 @@ const AuctionList = ({postList}) => {
     return ( 
         <div className={styles.auctionList}>
             {postList.map((post)=>(
-                <Auction post={post}></Auction>
+                <Auction key={post.postID} post={post}></Auction>
             ))}
         </div>
      );

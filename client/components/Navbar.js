@@ -6,13 +6,11 @@ import {useState} from "react";
 import { useEffect } from "react";
 import Axios from 'axios';
 import {useRouter} from 'next/router';
+import styles from "../styles/Navbar.module.css"
 
 
 const Navbar = () => {
-    const mystyle={
-        height: "40px",
-        backgroundColor: "grey",
-    }
+
     const [username, setUsername] = useState("");
     const router = useRouter();
 
@@ -43,16 +41,23 @@ const Navbar = () => {
       }, [])
 
     return (
-        <Row style={mystyle}>
-            <Col sm={4}>      
-                <Button variant="secondary" size="sm" onClick={toHome}>Home</Button>{' '}
-                <Button variant="secondary" size="sm">Your bids</Button>{' '}
-                <Button variant="secondary" size="sm" onClick={toCreatePost}>Create bid</Button>{' '}
+        <div className={styles.navbar}>
+            <Container>
+        <Row >
+            <Col md={8}>      
+                <Button variant="success" size="sm" onClick={toHome}>Home</Button>{' '}
+                <Button variant="success" size="sm">Your bids</Button>{' '}
+                <Button variant="success" size="sm" onClick={toCreatePost}>Create bid</Button>{' '}
             </Col>
-            <Col sm={{ span: 4, offset: 4 }}>
-                <h3 style={{textAlign : "right", fontSize : "17px", paddingRight:"10px"}} > {username} Balance: $0.0 </h3>
+            <Col md={4}>
+                {username}
+                <div className={styles.nav}>
+                <Button variant="success" size="sm" onClick={toCreatePost}>Balance $0.0</Button>{' '}
+                </div>
             </Col>
         </Row>
+        </Container>
+        </div>
      );
 }
  
