@@ -54,9 +54,6 @@ const createPost = () => {
             }))
         }
     }
-    const printTags = () =>{
-        console.log(addTag);
-    }
 
     const sumbitPost =(e)=>{
         e.preventDefault();

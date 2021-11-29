@@ -1,5 +1,6 @@
 const db = require("../config/db");
 const utils = require("../utils");
+const tags = require("./tag");
 
 const createPost = async (req,res) => {
     try{
@@ -28,37 +29,70 @@ const createPost = async (req,res) => {
     }
 }
 
+const listsHaveIntersection = (l1,l2) =>{
+    console.log(l1);
+    console.log(l2);
+    return l1.some(el => l2.includes(el));
+}
 
 const getAllPosts = async (req,res) => {
-    const posts = await utils.getAllRows("post",["postID","currentPrice","endTime","description"]);
+    const params = req.query;
+    const conditions = [];
+    if(params.hasOwnProperty("description"))
+    {
+        conditions.push({
+            operator:"LIKE",
+            field:"description",
+            value:`%${params.description}%`
+        })
+    }
+
+    //get all posts respecting conditions
+    var posts = await utils.selectQueryBuilder("post",["postID","currentPrice","endTime","description"],conditions);
+
+
+    //attach the list of tags  to the corresponding post for each post recieved
     for(i = 0; i < posts.length; i++)
     {
-        posts[i]["tags"] = await utils.getAllRowsWhere("post_tags",["tag","post_tagID"],"postID",posts[i]["postID"]);
+        const x = await utils.selectQueryBuilder("post_tags",["tag","post_tagID"],
+        [{
+            operator:"=",
+            field:"postID",
+            value:posts[i].postID
+        }]);
+        //reduce the list of rowPackets into a list of tags        
+        posts[i]["tags"] = x.reduce((taglist,row) => {
+            return [...taglist, row.tag];
+        },[]);
+    }
+    //filter by tags
+    if(params.hasOwnProperty("tags"))
+    {
+        posts = posts.filter(post => {
+             return listsHaveIntersection(post.tags,params.tags)
+        })
     }
     res.status(200).json(posts);
 }
+
+
 const validatePostData = (data) =>{
     const currentTime = (new Date).getTime();
     if(data.price == undefined || Number(data.price) <=0)
     {
-        console.log("price e baiu");
         return false;
     }
     if(data.description == undefined || data.description.length < 20)
     {
-        console.log("description e baiu");
         return false;
     }
     if(data.endDate == undefined || new Date(data.endDate).getTime() < currentTime)
     {
-        console.log("data e baiu");
         return false;
     }
     return validateTags(data.tagList)
 }
-const validateTags = (tagList) =>
-{
-    
+const validateTags = (tagList) =>{   
     const allowedTags = ['art','collectibles','electronics','furniture','vehicles']
     tagList.forEach(element => {
         if(!allowedTags.includes(element))
