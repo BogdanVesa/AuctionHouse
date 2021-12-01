@@ -9,6 +9,8 @@ import { Container } from "react-bootstrap";
 import TagList from "../components/TagList";
 import { useEffect } from "react";
 import Axios from "axios";
+import styles from "../styles/CreatePost.module.css";
+import TagCreateList from "../components/TagCreateList";
 
 
 const createPost = () => {
@@ -16,6 +18,8 @@ const createPost = () => {
     const [endDate, setEndDate] = useState(new Date());
     const [description, setDescription] = useState('');
     const [price, setPrice] = useState('');
+    const [picture, setPicture] = useState('');
+    const [file, setFile] = useState('');
 
     const filterPassedTime = (time) => {
         const currentDate = new Date();
@@ -85,16 +89,25 @@ const createPost = () => {
             };
             console.log(post)
             Axios.post("http://localhost:3001/posts/createPost",post,config)
-            .then((resolve)=> {
-                alert("post was created successfully")
-                })
-                .catch(err => {
-                    // what now?
-                    alert(err.response.data.message);
-                    console.log(err);
-                });
+             .then((resolve)=> {
+                 alert("post was created successfully")
+                 })
+                 .catch(err => {
+                     // what now?
+                     alert(err.response.data.message);
+                     console.log(err);
+                 });
         }
             
+    }
+    const handlerImage =(e)=>{
+        setPicture(URL.createObjectURL(e.target.files[0]));
+        setFile(e.target.files[0]);
+    }
+
+    const showPicture =(e)=>{
+        e.preventDefault();
+        console.log(file);
     }
     useEffect(() => {
         getTaglist();
@@ -103,31 +116,51 @@ const createPost = () => {
     return (
         <div>
             <Navbar></Navbar>
-            <Container>
+            <Container className={styles.create}>
             <Form>
                 <Form.Group className="mb-3">
                     <Form.Label>Description</Form.Label>
                     <Form.Control as="textarea" rows={3} onChange={(e)=>setDescription(e.target.value)} />
                 </Form.Group>
+                <div className={styles.price}>
                 <Form.Group className="mb-3">
                     <Form.Label>Price</Form.Label>
                     <Form.Control type="number" placeholder="Price" onChange={(e)=>setPrice(e.target.value)}/>
                 </Form.Group>
+                </div>
             </Form>
-            <TagList tagList={tagList} onAdd={addTagPost} onRemove={removeTagPost}/>
-            <DatePicker
-            filterDate={d => {
-            return d > subDays(new Date(),1)
-            }}
-            filterTime={filterPassedTime}
-            placeholderText="Select End Date"
-            showTimeSelect
-            timeIntervals={5}
-            dateFormat="dd/MM/yyyy h:mmaa"
-            selected={endDate}
-            startDate={startDate}
-            onChange={date => setEndDate(date)}/>
-            <Button variant="secondary" size="sm" onClick={sumbitPost}>Submit</Button>{' '}
+            <div className={styles.alignRow}>
+                <TagCreateList tagList={tagList} onAdd={addTagPost} onRemove={removeTagPost}/>
+                <div className={styles.picture}>
+                    <div>
+                        <input type="file" onChange={handlerImage}/>
+                        <Button variant="success" size="sm" onClick={showPicture}>Add picture</Button>{' '}
+                    </div>
+                    <div className={styles.picturePreview}>
+                        <img className={styles.showPicture} src={picture}/>
+                    </div>
+                </div>
+                <div className={styles.date}>
+                    <div>
+                        Ends at:
+                        <DatePicker
+                        filterDate={d => {
+                        return d > subDays(new Date(),1)
+                        }}
+                        filterTime={filterPassedTime}
+                        placeholderText="Select End Date"
+                        showTimeSelect
+                        timeIntervals={5}
+                        dateFormat="dd/MM/yyyy h:mmaa"
+                        selected={endDate}
+                        startDate={startDate}
+                        onChange={date => setEndDate(date)}/>
+                    </div>
+                    <div>
+                        <Button variant="success" size="sm" onClick={sumbitPost}>Submit</Button>{' '}
+                    </div>
+                </div>
+            </div>
             </Container>
         </div>
 
