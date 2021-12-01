@@ -1,0 +1,89 @@
+.create{
+    margin-top: 40px;
+    max-height: 645px;
+    display: flex;
+    flex-direction: column;
+    padding: 15px 15px 15px 15px;
+    border-style: solid;
+    border-color: grey;
+    border-radius: 10px;
+    overflow: auto;
+    background-color: #4C4B63;
+    font-size: 12px;
+    font-family: 'Lucida Bright';
+    color: white;
+}
+.tagList{
+    height: 236px;
+    width: 20%;
+    padding: 15px 15px 15px 15px;
+    border-style: solid;
+    border-color: grey;
+    border-radius: 10px;
+    overflow: auto;
+    background-color: #4C4B63;
+    font-size: 15px;
+    font-family: 'Lucida Bright';
+}
+.tagItem{
+    border-style: solid;
+    border-color: grey;
+    border-radius: 10px;
+    display: flex;
+    align-content: flex-start;
+    padding: 10px 15px;
+    text-decoration: none;
+    color: black;
+    height: 10%;
+    margin-bottom: 15px;
+    background-color: #E36D3B;
+    align-items: center;
+}
+.price{
+    width: 20%;
+}
+.date{
+    border-style: solid;
+    border-color: grey;
+    border-radius: 10px;
+    align-self: center;
+    height:174px;
+    width: 23%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    align-content: center;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+}
+.alignRow{
+    border-style: solid;
+    border-color: grey;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.picture{
+    border-style: solid;
+    border-color: grey;
+    border-radius: 10px;
+    display: flex;
+    align-self: center;
+    align-items: center;
+    height: 236px;
+    width: 40%;
+    padding: 15px;
+}
+.picturePreview{
+    border-style: solid;
+    border-color: grey;
+    border-radius: 10px;
+    margin-left: auto;
+    width: 62%;
+    height: 84%;
+}
+.showPicture{
+    width: 100%;
+    height: 100%;
+}
