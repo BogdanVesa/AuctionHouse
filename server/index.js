@@ -5,6 +5,7 @@ const users = require("./routes/userRoutes");
 const tags = require("./routes/tagsRoutes");
 const posts = require("./routes/postRoutes");
 const comments = require("./routes/commentRoutes");
+const bids = require("./routes/bidRoutes");
 const app = express();
 const cors = require("cors");
 const utils = require("./utils");
@@ -15,6 +16,7 @@ app.use(cors({
 app.use("/auth", users);
 app.use("/posts",posts);
 app.use("/comments",comments);
+app.use("/bids",bids)
 app.use(tags);
 
 

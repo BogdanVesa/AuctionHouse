@@ -76,19 +76,21 @@ const createPost = () => {
         }
         else
         {
+            const fd = new FormData();
             const post = {
                 description : description,
                 price : price,
                 endDate : endDate.toISOString(),
-                tagList : addTag
+                tagList : addTag,
             }
+            fd.append('post',JSON.stringify(post));
+            fd.append('pic',file);
             const config = {
                 headers : {
                     "x-access-token": localStorage.getItem('token'),
                 }
             };
-            console.log(post)
-            Axios.post("http://localhost:3001/posts/createPost",post,config)
+            Axios.post("http://localhost:3001/posts/createPost",fd,config)
              .then((resolve)=> {
                  alert("post was created successfully")
                  })
@@ -133,7 +135,7 @@ const createPost = () => {
                 <TagCreateList tagList={tagList} onAdd={addTagPost} onRemove={removeTagPost}/>
                 <div className={styles.picture}>
                     <div>
-                        <input type="file" onChange={handlerImage}/>
+                        <input type="file" name="pic" onChange={handlerImage}/>
                         <Button variant="success" size="sm" onClick={showPicture}>Add picture</Button>{' '}
                     </div>
                     <div className={styles.picturePreview}>

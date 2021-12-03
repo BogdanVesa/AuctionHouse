@@ -21,14 +21,18 @@ export default function Home() {
     Axios.get("http://localhost:3001/allTags").then((response =>{
       console.log(response.data);
       setTagList(response.data);
-    }));
+    })).catch((err)=>{
+      console.log(err);
+    });
   }
 
   const getAllPosts =()=>{
     Axios.get("http://localhost:3001/posts/getPosts").then((response =>{
       console.log(response.data);
       setPostList(response.data);
-    }))
+    })).catch((err)=>{
+      console.log(err)
+    })
   }
 
   const [addTag, setAddTag] = useState([]);

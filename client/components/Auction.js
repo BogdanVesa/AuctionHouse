@@ -5,7 +5,7 @@ import format from 'date-fns/format'
 const Auction = ({post}) => {
     return ( 
     <div className={styles.auction}>
-        <Picture/>
+        <Picture postID = {post.postID}/>
         <div className={styles.description}>{post.description}</div> 
         <div className={styles.priceDate}>
             <div>Ends at:</div>
