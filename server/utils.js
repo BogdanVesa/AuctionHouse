@@ -50,6 +50,18 @@ const getAllRowsWhere = async (table,fields,conditionField,value) =>{
     })
 }
 
+const promiseFromQuery = async(sql)=>{
+    return new Promise((resolve,reject)=>{
+        db.query(sql,(err,result) =>{
+            if(err)
+            {
+                console.log(err);
+                reject(err);
+            }
+            resolve(result);
+        })
+    })
+}
 
 const chainedConditionsHelper = (condition) =>{   
 
@@ -65,58 +77,93 @@ const chainedConditionsHelper = (condition) =>{
     return `${condition.field} ${condition.operator} `+db.escape(condition.value);
     
 }
-
-
-const selectQueryBuilder = async (table,fields,conditions=[],chainOperator="AND") =>{
-    var sql = "SELECT ?? FROM ??";
+const queryBuilderHelper = (conditions,chainOperator="AND") =>{
+    var sql ="";
     if(conditions.length > 0)
     {
+        // console.log("intra in if");
         sql+=" WHERE "+chainedConditionsHelper(conditions[0])
         if(conditions.length > 1)
         {
             conditions.shift();
             conditions.forEach(condition => {
-               sql+=` ${chainOperator} `+chainedConditionsHelper(condition)
-              })
-        }
-    }
-    sql =db.format(sql,[fields,table]);
-    // console.log(sql);
-
-   return new Promise ((resolve,reject) => {
-       db.query(sql,(err,result)=> {
-           if(err)
-           {
-               console.log(err)
-               reject(err);
-           }
-           resolve(result);
-       })
-   })
-}
-const deleteQueryBuilder = async (table,conditions=[], chainOperator="AND") =>{
-    var sql = "DELETE FROM ??";
-    if(conditions.length > 0)
-    {
-        sql+=" WHERE "+chainedConditionsHelper(conditions[0])
-        if(conditions.length > 1)
-        {
-            conditions.shift();
-            conditions.forEach(condition =>{
-                sql+=` ${chainOperator} `+chainedConditionsHelper(condition)
+                sql+=` ${chainOperator} `+chainedConditionsHelper(condition);
             })
         }
     }
-    sql = db.format(sql,table);
-    return new Promise ((resolve,reject) => {
-        db.query(sql,(err,result)=> {
-            if(err)
-            {
-                console.log(err)
-                reject(err);
-            }
-            resolve(result);
-        })
-    })
+    return sql;
 }
-module.exports={findByField,insert,getAllRows,getAllRowsWhere,deleteQueryBuilder,selectQueryBuilder}
+
+
+const selectQueryBuilder = async (table,fields,conditions=[],chainOperator="AND") =>{
+    var sql = "SELECT ?? FROM ??";
+    // if(conditions.length > 0)
+    // {
+    //     sql+=" WHERE "+chainedConditionsHelper(conditions[0])
+    //     if(conditions.length > 1)
+    //     {
+    //         conditions.shift();
+    //         conditions.forEach(condition => {
+    //            sql+=` ${chainOperator} `+chainedConditionsHelper(condition)
+    //           })
+    //     }
+    // }
+    sql+=queryBuilderHelper(conditions,chainOperator);
+    sql =db.format(sql,[fields,table]);
+    // console.log(sql);
+
+//    return new Promise ((resolve,reject) => {
+//        db.query(sql,(err,result)=> {
+//            if(err)
+//            {
+//                console.log(err)
+//                reject(err);
+//            }
+//            resolve(result);
+//        })
+//    })
+    return promiseFromQuery(sql);
+}
+const deleteQueryBuilder = async (table,conditions=[], chainOperator="AND") =>{
+    var sql = `DELETE FROM ${db.escapeId(table)}`;
+    // if(conditions.length > 0)
+    // {
+    //     sql+=" WHERE "+chainedConditionsHelper(conditions[0])
+    //     if(conditions.length > 1)
+    //     {
+    //         conditions.shift();
+    //         conditions.forEach(condition =>{
+    //             sql+=` ${chainOperator} `+chainedConditionsHelper(condition)
+    //         })
+    //     }
+    // }
+    sql+=queryBuilderHelper(conditions,chainOperator);
+
+    // return new Promise ((resolve,reject) => {
+    //     db.query(sql,(err,result)=> {
+    //         if(err)
+    //         {
+    //             console.log(err);
+    //             reject(err);
+    //         }
+    //         resolve(result);
+    //     })
+    // })
+    return promiseFromQuery(sql)
+}
+const updateQueryBuilder = async (table,valuePairs,conditions, chainOperator="AND") =>{
+    var sql = `UPDATE ${db.escapeId(table)} SET`
+    sql+= " "+db.escapeId(valuePairs[0].col)+" = "+db.escape(valuePairs[0].val)
+    if(valuePairs.length > 1)
+    {
+        valuePairs.shift();
+        valuePairs.forEach((pair) => {
+            sql+= ", "+db.escapeId(pair.col)+" = "+db.escape(pair.val)
+        })
+    }
+
+    sql+=queryBuilderHelper(conditions,chainOperator);
+    return promiseFromQuery(sql);
+}
+
+module.exports={findByField,insert,getAllRows,getAllRowsWhere,deleteQueryBuilder,selectQueryBuilder,updateQueryBuilder}

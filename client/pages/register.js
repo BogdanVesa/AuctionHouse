@@ -6,6 +6,7 @@ import { useState } from 'react';
 import Axios from 'axios';
 import {useRouter} from 'next/router';
 import { useEffect } from "react";
+import Modal from 'react-bootstrap/Modal';
 
 const Register = () => {
     const [email, setEmail ] = useState('');
@@ -13,6 +14,8 @@ const Register = () => {
     const [confirmed, setConfirmed] = useState('');
     const [username, setUsername] = useState('');
     const router = useRouter();
+    const [show, setShow] = useState(false);
+    const [code,setCode] = useState('');
 
     useEffect(() => {
         localStorage.setItem("token",'');
@@ -28,7 +31,7 @@ const Register = () => {
                 username : username,
                 password : password 
             }).then((response =>{
-                router.push('/login');
+                setShow(true);
             })).catch(err => {
                 alert(err.response.data.message);
                 console.log(err);
@@ -48,6 +51,36 @@ const Register = () => {
         if(!confirmed || password !== confirmed)
             s+="Password and confirm password doesn't match\n"
        return s;
+    }
+
+    const handleShow =(e)=>{
+        e.preventDefault();
+        setShow(false);
+    }
+    const verifiyCode=(e)=>{
+        e.preventDefault();
+
+        Axios.post("http://localhost:3001/auth/confirm",{
+            email: email,
+            key : code
+        }).then((response)=>{
+            console.log(response);
+            router.push('/login')
+        }).catch((err)=>{
+            alert(err.response.data.message);
+        })
+    }
+
+    const resendCode =(e)=>{
+        e.preventDefault();
+
+        Axios.post("http://localhost:3001/auth/newKey",{
+            email: email,
+        }).then((response)=>{
+            console.log(response);
+        }).catch((err)=>{
+            console.log(err);
+        })
     }
 
     return (  
@@ -74,6 +107,32 @@ const Register = () => {
                 Submit
             </Button>
         </Form>
+        <Modal
+        show={show}
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+        >
+            <Modal.Header closeButton>
+                <Modal.Title id="contained-modal-title-vcenter">
+                    Acount confirmation
+                </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <Form>
+                    Please enter the confirmation code we sent at your email address
+                <Form.Group className="mb-3">
+                    <Form.Label className = {styles.label}>Code</Form.Label>
+                    <Form.Control type="text" placeholder="Code" value={code} onChange={(e)=>setCode(e.target.value) }/>
+                </Form.Group>
+                </Form>
+            </Modal.Body>
+            <Modal.Footer>
+                <Button onClick={resendCode}>Resend Code</Button>
+                <Button onClick={verifiyCode} variant="success">Submit</Button>
+                <Button onClick={handleShow} variant='secondary'>Close</Button>
+            </Modal.Footer>
+            </Modal>
         </div>
     </div>
     );

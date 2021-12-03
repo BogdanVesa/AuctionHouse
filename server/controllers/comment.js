@@ -1,6 +1,6 @@
 const db = require("../config/db");
 const utils = require("../utils");
-
+const checkIfPostExists = require("./post").checkIfPostExists
 
 const createComment = async (req,res) =>{
     try {
@@ -38,28 +38,6 @@ const validateCommentData = (content) => {
     if(content === undefined || content.length < 5 || content.trim() === "")
         return false
     return true;
-}
-
-const checkIfPostExists = async (id) =>{
-    // try {
-    //     const post = await utils.findByField("post","postID",id)
-    //     if(post === undefined || post.length === 0)
-    //         return false;
-    //     return true;
-    // } catch (err) {
-    //     console.log(err)
-    //     return false
-    // }
-    return new Promise( async (resolve,reject) =>{
-        try {
-            const post = await utils.findByField("post","postID",id)
-            if(post && post.length>0)
-                resolve(true);
-            resolve(false)
-        } catch (err) {
-           reject(err) 
-        }
-    })
 }
 
 const deleteComment = async(req,res) =>{

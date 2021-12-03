@@ -6,12 +6,15 @@ import { useState } from 'react';
 import Axios from 'axios';
 import {useRouter} from 'next/router';
 import { useEffect } from "react";
-import Link from 'next/link'
+import Link from 'next/link';
+import Modal from 'react-bootstrap/Modal';
 
 
 const Login = () => {
     const [email, setEmail ] = useState('');
     const [password, setPassword ] = useState('');
+    const [show, setShow] = useState(false);
+    const [code,setCode] = useState('');
 
     const router = useRouter();
 
@@ -26,13 +29,22 @@ const Login = () => {
                 }).then((response =>{
                     localStorage.setItem("token", response.data.token);
                     console.log(response.data);
-                    console.log(localStorage.getItem("token"));
-                    setEmail('');
                     setPassword('');
                     router.push('/');
                 })).catch(err => {
                     // what now?
-                    alert(err.response.data.message);
+                    if(err.response.data.message === "this account doesn't exist")
+                    {
+                        alert("confirm your registration and try again!")
+                        Axios.post("http://localhost:3001/auth/checkIfTemp",{
+                            email : email,
+                        }).then((response)=>{
+                            if(response.data === true)
+                                setShow(true)
+                        }).catch((err)=>{
+                            console.log(err);
+                        })
+                    }
                     console.log(err);
                 });
             }
@@ -46,6 +58,36 @@ const Login = () => {
         if(!password  || password.length < 5)  
             s+="Password must be longer than 5 characters\n"
        return s;
+    }
+
+    const handleShow =(e)=>{
+        e.preventDefault();
+        setShow(false);
+    }
+    const verifiyCode=(e)=>{
+        e.preventDefault();
+
+        Axios.post("http://localhost:3001/auth/confirm",{
+            email: email,
+            key : code
+        }).then((response)=>{
+            console.log(response);
+            setShow(false);
+        }).catch((err)=>{
+            alert(err.response.data.message);
+        })
+    }
+
+    const resendCode =(e)=>{
+        e.preventDefault();
+
+        Axios.post("http://localhost:3001/auth/newKey",{
+            email: email,
+        }).then((response)=>{
+            console.log(response);
+        }).catch((err)=>{
+            console.log(err);
+        })
     }
 
     useEffect(() => {
@@ -73,6 +115,31 @@ const Login = () => {
                 </Button>
                 <Link href="/register">Register here</Link>
             </Form>
+            <Modal
+        show={show}
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+        >
+            <Modal.Header closeButton>
+                <Modal.Title id="contained-modal-title-vcenter">
+                    Acount confirmation
+                </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <Form>
+                    Please enter the confirmation code we sent at your email address
+                <Form.Group className="mb-3">
+                    <Form.Control type="text" placeholder="Code" value={code} onChange={(e)=>setCode(e.target.value) }/>
+                </Form.Group>
+                </Form>
+            </Modal.Body>
+            <Modal.Footer>
+                <Button onClick={resendCode}>Resend Code</Button>
+                <Button onClick={verifiyCode} variant="success">Submit</Button>
+                <Button onClick={handleShow} variant='secondary'>Close</Button>
+            </Modal.Footer>
+            </Modal>
             </div>
         </div>
      );

@@ -20,7 +20,7 @@ const Navbar = () => {
         }}).then((response =>{
             setUsername(response.data[0].username);
         })).catch(err => {
-            alert(err.response.data.message);
+            alert(err);
         });
     }
 
@@ -37,7 +37,9 @@ const Navbar = () => {
         if(localStorage.getItem("token") === ''){
             router.push("/login")
         }
-        getUsername();
+        else{
+            getUsername();    
+        }
       }, [])
 
     return (
