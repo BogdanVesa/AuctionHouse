@@ -1,0 +1,62 @@
+.post{
+    margin-top: 40px;
+    height: 645px;
+    display: flex;
+    flex-direction: column;
+    padding: 15px 15px 15px 15px;
+    border-style: solid;
+    border-color: grey;
+    border-radius: 10px;
+    overflow: auto;
+    background-color: #4C4B63;
+    font-size: 12px;
+    font-family: 'Lucida Bright';
+    color: white;
+}
+.alignRow{
+    height: 32%;
+    border-style: solid;
+    border-color: grey;
+    border-radius: 10px;
+    border-width: 1px;
+    display: flex;
+    flex-direction: row;
+    column-gap: 80px;
+}
+.picture{
+    height: 100%;
+    width: 37%;
+    align-self: flex-start;
+    border-style: solid;
+    border-color: grey;
+    border-radius: 10px;
+}
+.pictureView{
+    height: 100%;
+    width: 100%;
+    border-radius: 10px;
+}
+.description{
+    display: flex;
+    padding: 20px;
+    background-color: #E36D3B;
+    border-style: solid;
+    border-color: grey;
+    border-radius: 10px;
+    height: 100%;
+    width: 60%;
+    font-size: 19px;
+}
+.priceDate{
+    height: 100%;
+    width: 20%;
+    border-style: solid;
+    border-color: grey;
+    border-width: 1px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}

@@ -152,7 +152,7 @@ const createPost = () => {
                         filterTime={filterPassedTime}
                         placeholderText="Select End Date"
                         showTimeSelect
-                        timeIntervals={5}
+                        timeIntervals={1}
                         dateFormat="dd/MM/yyyy h:mmaa"
                         selected={endDate}
                         startDate={startDate}

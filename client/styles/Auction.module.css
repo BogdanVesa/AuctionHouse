@@ -35,6 +35,11 @@
     height: 26%;
     margin-bottom: 15px;
     background-color: #E36D3B;
+    transition: 0.3s;
+}
+.auction:hover{
+    cursor: pointer;
+    background-color: #aa4013;
 }
 .picture{
     border-style: solid;
