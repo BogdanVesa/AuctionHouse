@@ -28,7 +28,6 @@ const getAllRows = async (table,fields) => {
     return new Promise((resolve, reject) =>{
        
         var query = db.query("SELECT ?? from ??",[fields,table],(err,result) => {
-            // console.log(query);
             if(err)
                 reject(err);
             resolve(result);
@@ -65,7 +64,6 @@ const promiseFromQuery = async(sql)=>{
 
 const chainedConditionsHelper = (condition) =>{   
 
-    //returns a pre-formated sql condition 
     if(condition.operator == "BETWEEN")
     {
         return`${condition.field} BETWEEN `+db.escape(condition.value[0]) +" AND "+db.escape(condition.value[1]);
@@ -81,7 +79,6 @@ const queryBuilderHelper = (conditions,chainOperator="AND") =>{
     var sql ="";
     if(conditions.length > 0)
     {
-        // console.log("intra in if");
         sql+=" WHERE "+chainedConditionsHelper(conditions[0])
         if(conditions.length > 1)
         {
@@ -97,58 +94,13 @@ const queryBuilderHelper = (conditions,chainOperator="AND") =>{
 
 const selectQueryBuilder = async (table,fields,conditions=[],chainOperator="AND") =>{
     var sql = "SELECT ?? FROM ??";
-    // if(conditions.length > 0)
-    // {
-    //     sql+=" WHERE "+chainedConditionsHelper(conditions[0])
-    //     if(conditions.length > 1)
-    //     {
-    //         conditions.shift();
-    //         conditions.forEach(condition => {
-    //            sql+=` ${chainOperator} `+chainedConditionsHelper(condition)
-    //           })
-    //     }
-    // }
     sql+=queryBuilderHelper(conditions,chainOperator);
     sql =db.format(sql,[fields,table]);
-    // console.log(sql);
-
-//    return new Promise ((resolve,reject) => {
-//        db.query(sql,(err,result)=> {
-//            if(err)
-//            {
-//                console.log(err)
-//                reject(err);
-//            }
-//            resolve(result);
-//        })
-//    })
     return promiseFromQuery(sql);
 }
 const deleteQueryBuilder = async (table,conditions=[], chainOperator="AND") =>{
     var sql = `DELETE FROM ${db.escapeId(table)}`;
-    // if(conditions.length > 0)
-    // {
-    //     sql+=" WHERE "+chainedConditionsHelper(conditions[0])
-    //     if(conditions.length > 1)
-    //     {
-    //         conditions.shift();
-    //         conditions.forEach(condition =>{
-    //             sql+=` ${chainOperator} `+chainedConditionsHelper(condition)
-    //         })
-    //     }
-    // }
     sql+=queryBuilderHelper(conditions,chainOperator);
-
-    // return new Promise ((resolve,reject) => {
-    //     db.query(sql,(err,result)=> {
-    //         if(err)
-    //         {
-    //             console.log(err);
-    //             reject(err);
-    //         }
-    //         resolve(result);
-    //     })
-    // })
     return promiseFromQuery(sql)
 }
 const updateQueryBuilder = async (table,valuePairs,conditions, chainOperator="AND") =>{
@@ -166,4 +118,31 @@ const updateQueryBuilder = async (table,valuePairs,conditions, chainOperator="AN
     return promiseFromQuery(sql);
 }
 
-module.exports={findByField,insert,getAllRows,getAllRowsWhere,deleteQueryBuilder,selectQueryBuilder,updateQueryBuilder}
+const getCommentsWithUsername = async (postID)=>{
+    return new Promise((resolve,reject) =>{
+        var sql = `select commentID,comment.userID,content,username,createdAt from comment inner join user on comment.userID = user.UserID where comment.postID = ${postID}`
+        db.query(sql,(err,result)=>{
+            if(err)
+            {
+                console.log(err);
+                reject(err);
+            }
+            resolve(result);
+        })
+    })    
+} 
+
+
+
+const dateToCronExpression = (date)=>{
+    date = new Date(date);
+    const min = date.getMinutes();
+    const hour = date.getHours();
+    const day = date.getDate();
+    const month = date.getMonth()+1;
+    const dayOfWeek = date.getDay();
+    console.log(`${min} ${hour} ${day} ${month} ${dayOfWeek}`);
+    return `${min} ${hour} ${day} ${month} ${dayOfWeek}`
+}
+
+module.exports={findByField,insert,getAllRows,getAllRowsWhere,deleteQueryBuilder,selectQueryBuilder,updateQueryBuilder,dateToCronExpression,getCommentsWithUsername}

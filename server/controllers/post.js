@@ -1,8 +1,10 @@
-const db = require("../config/db");
+const db = require("../config/db").db;
 const utils = require("../utils");
 const tags = require("./tag");
 const path = require("path");
 const multer = require("multer");
+var cron = require("node-cron");
+const mailer = require("../config/nodemailer");
 const storage = multer.diskStorage({
     destination:"../images/",
     filename: async function(req,file,cb) {
@@ -62,6 +64,9 @@ const createPost = async (req,res) => {
                     const tagInserts = data.tagList.map(el => {
                         utils.insert("post_tags",["postID","tag"],[result.insertId,el]);
                     })
+                    cron.schedule(utils.dateToCronExpression(data.endDate), async () =>{
+                        await determineAuctionOutcome2(result.insertId);
+                    });
                     Promise.all(tagInserts)
                     .then(async (results) =>{
                         const image = await utils.insert("image",["postID","filename"],[result.insertId,req.file.filename])
@@ -180,7 +185,128 @@ const validateTags = (tagList) =>{
     return true
 }
 
+const determineAuctionOutcome2 =  async(id)=>{
+    try {
+        // console.log("intra in functie");
+        var post = await utils.findByField("post","postID",id);
+        if(post && post.length!==0)
+        {
+            post = post[0];
+            // console.log(post);
+            var owner  = await utils.findByField("user","UserID",post.ownerID);
+            owner = owner[0];
+            if(post.highestBidder === null)
+            {
+                let html = `<h2> Sadly one of your auctions has ended without a buyer</h2>
+                <p>maybe try to list it again with a better photo and description to increase the likelyhood of people being interested</p>
+                <a href="http://localhost:3000/posts">(to be implemented)</a>`    
+                const mail = await mailer.sendMailHTML("auction result",owner.email,html);
+                if(mail === 1)
+                    console.log("ok");
+                else
+                    console.log("not ok");
+            }
+            else
+                console.log("are un bidder"); 
+        }
+        else
+            console.log("nu exista post ul");
+    } catch (err) {
+        console.log(err);
+    }
+}
 
+const determineAuctionOutcome =  async(req,res)=>{
+    try {
+        let html
+        // console.log("intra in functie");
+        var post = await utils.findByField("post","postID",req.body.id);
+        if(post && post.length > 0)
+        {
+            post = post[0];
+            // console.log(post);
+            var owner  = await utils.findByField("user","UserID",post.ownerID);
+            owner = owner[0];
+            if(post.highestBidder === null)
+            {
+                html = `<h2> Sadly one of your auctions has ended without a buyer</h2>
+                <p>maybe try to list it again with a better photo and description to increase the likelyhood of people being interested</p>
+                <a href="http://localhost:3000/posts">(to be implemented)</a>`    
+                const mail = await mailer.sendMailHTML("auction result",owner.email,html);
+                console.log(mail);
+                if(mail === 1)
+                    res.status(200).json({message:"ok"});
+                else
+                    res.status(400).json({message:"not ok"});
+            }
+            else
+            {
+                var buyer = await utils.findByField("user","UserID",post.highestBidder)
+                if(buyer && buyer.length > 0){
+                    buyer = buyer[0];
+                    const updateBuyerBalance = await utils.updateQueryBuilder("user",[{col:"balance",val:(buyer.balance-post.currentPrice)}],[{operator:"=",field:"UserID",value:buyer.UserID}]);
+                    const updateSellerBalance = await utils.updateQueryBuilder("user",[{col:"balance",val:(owner.balance+post.currentPrice)}],[{operator:"=",field:"UserID",value:owner.UserID}]);
+                    const sendMailToBuyer = await mailer.sendMailHTML("auction won",buyer.email,`<h2>you just won an auction!</h2>
+                    <p> ${post.currentPrice}$ were extracted from your account to complete the payment</p>
+                    <p><kind regards, AuctionHouse staff/p>`)
+                    const sendMailToSeller = await mailer.sendMailHTML("auction result",owner.email,`<h2>you just sold an auction!</h2>
+                    <p> ${post.currentPrice}$ should enter your account shortly</p>
+                    <p>kind regards, AuctionHouse staff</p>`)
+                    res.status(200).json({message:"ok"});
+                }
+                else
+                {
+                    res.status(400).json({message:"buyer was not found"});
+                }
+            } 
+        }
+        else
+            res.status(500).json({message:"nu exista post ul"});
+    } catch (err) {
+        console.log(err);
+    }
+}
+const getSpecificPost = async (req,res) =>{
+  try{
+    
+    if(req.params.hasOwnProperty("id"))
+    {
+        var post = await utils.findByField("post","postID",req.params.id);
+        if(post && post.length > 0)
+        {
+            post = post[0];
+            var tags = await utils.findByField("post_tags","postID",post.postID);
+            tags = tags.reduce((prev,curr)=>{
+                return [...prev,curr.tag]
+            },[])
+            post["tags"] = tags;
+            var comments = await getCommentsWithUsername(post.postID)
+            post["comments"] = comments
+            res.status(200).json(post);
+        }
+        else
+            res.status(400).json({message: "post was not found"});
+    }
+    else
+        res.status(500).json({message:"post info couldn;t be retrieved, try again later"});
+  }catch(err){
+    console.log(err)
+    res.status(500).json({message:"post info couldn;t be retrieved, try again later"});
+  }
+}
+const getCommentsWithUsername = async (postID)=>{
+    return new Promise((resolve,reject) =>{
+        var sql = `select commentID,comment.userID,content,username,createdAt from comment inner join user on comment.userID = user.UserID where comment.postID = ${postID}`
+        db.query(sql,(err,result)=>{
+            if(err)
+            {
+                console.log(err);
+                reject(err);
+            }
+            resolve(result);
+        })
+    })    
+} 
 
 const checkIfPostExists = async (id) =>{
     return new Promise( async (resolve,reject) =>{
@@ -195,4 +321,4 @@ const checkIfPostExists = async (id) =>{
     })
 }
 
- module.exports = {createPost,getAllPosts,getPostImage,checkIfPostExists}
+ module.exports = {createPost,getAllPosts,getPostImage,checkIfPostExists,determineAuctionOutcome,getSpecificPost}

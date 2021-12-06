@@ -185,6 +185,25 @@ const getUserInfo =  async (req,res) => {
     const user = await utils.findByField('user','UserID',req.userID);
     res.status(200).json(user);
 }
+const addBalance = async (req,res) =>{
+ try{
+    
+    var user = await utils.findByField("user","UserID",req.userID);
+    if(user && user.length>0)
+    {
+        user=user[0];
+        const result = await utils.updateQueryBuilder("user",[{col:"balance",val:user.balance+100}],[{operator:"=",field:"UserID",value:user.UserID}]);
+        res.status(200).json(user.balance+100);
+    }
+    else
+    {
+        res.status(400).json("user was not found in db");
+    }
+ }catch(err){
+    console.log(err);
+    res.status(200).json({message:"could not add money to you balance, try again "})
+ }
+}
 async function encryptPass(pass) {
     key = await bcrypt.hash(pass,10);  
     return key;
@@ -200,5 +219,6 @@ module.exports = {
     getUserInfo,
     confirmRegister,
     generateNewKey,
-    checkIfTempUser
+    checkIfTempUser,
+    addBalance
 }

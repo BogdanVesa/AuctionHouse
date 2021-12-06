@@ -1,4 +1,4 @@
-const db = require("../config/db");
+const db = require("../config/db").db;
 const utils = require("../utils");
 const checkIfPostExists = require("./post").checkIfPostExists
 
@@ -11,7 +11,8 @@ const createComment = async (req,res) =>{
         else
         {
             const result = await utils.insert("comment",["postID","userID","content"],[req.params.postID,req.userID,req.body.content]);
-            res.status(200).json({message: "comment posted succesfully"});
+            const newComment = await getCommentsWithUsername(result.insertId);
+            res.status(200).json({newComment});
         }
     } catch (err) {
         console.log(err);
@@ -19,6 +20,19 @@ const createComment = async (req,res) =>{
     }
 }
 
+const getCommentsWithUsername = async (commentID)=>{
+    return new Promise((resolve,reject) =>{
+        var sql = `select commentID,comment.userID,content,username,createdAt from comment inner join user on comment.userID = user.UserID where comment.commentID = ${commentID}`
+        db.query(sql,(err,result)=>{
+            if(err)
+            {
+                console.log(err);
+                reject(err);
+            }
+            resolve(result);
+        })
+    })    
+} 
 
 const getComments = async (req,res) =>{
     try {

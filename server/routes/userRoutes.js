@@ -13,5 +13,6 @@ router.post("/newKey",controller.generateNewKey);
 router.post("/checkIfTemp",controller.checkIfTempUser);
 router.get("/users",controller.getAllUsers);
 router.get("/getUserInfo",auth,controller.getUserInfo);
+router.get("/addBalance",auth,controller.addBalance)
 
 module.exports = router;

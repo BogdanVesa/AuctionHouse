@@ -26,5 +26,21 @@ const sendMail = async (subject,mail,text) =>{
         return 0;
     }
 }
+const sendMailHTML = async (subject,mail,html) =>{
+    try {
+        const da = await transporter.sendMail({
+            from:`AuctionHouse staff <${process.env.MAIL}>`,
+            to:mail,
+            subject:subject,
+            text:"",
+            html:html
+        })
+        // console.log(da);
+        return 1;
+    } catch (error) {
+        console.log(err);
+        return 0;
+    }
+}
 
-module.exports = {sendMail};
+module.exports = {sendMail,sendMailHTML};
