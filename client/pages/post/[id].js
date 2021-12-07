@@ -8,6 +8,7 @@ import format from 'date-fns/format'
 import Button from "react-bootstrap/Button";
 import Form from 'react-bootstrap/Form';
 import CommentList from '../../components/CommentList';
+import TagPost from '../../components/TagPost';
 
 export const getStaticPaths = async ()=>{
     try{
@@ -111,29 +112,30 @@ const Details = ({post}) => {
         <div>
             <Navbar/>
             <Container className={styles.post}>
-                <div className={styles.alignRow}>
                     <div className={styles.picture}>
                         <img className={styles.pictureView} src={picture}></img>
                     </div>
-                    <div className={styles.description}>{post.description}</div>
-                </div>
-                <div className={styles.alignRow}>
-                    <div className={styles.priceDate}>
-                        <div>Ends at:</div>
-                        <div>{format(Date.parse(post.endTIme), 'd.MM.Y H:m')}</div> 
-                        <div>Price: ${post.currentPrice}</div>
+                    <div className={styles.details}>
+                        <div className={styles.description}>{post.description}</div>
+                        <div className={styles.alignRow}>
+                            <TagPost tagList={post.tags}/>
+                            <div className={styles.priceDate}>
+                                <div>Ends at:</div>
+                                <div>{format(Date.parse(post.endTIme), 'd.MM.Y H:m')}</div> 
+                                <div>Price: ${post.currentPrice}</div>
+                            </div>
+                            <div className={styles.bid}>
+                                <Form>
+                                <Form.Group className="mb-3">
+                                    <Form.Control type="number" placeholder="How much?" value={price} onChange={(e)=>setPrice(e.target.value)}/>
+                                </Form.Group>
+                                </Form>
+                                <Button variant="danger" size='lg' onClick={bid}>Bid now!</Button>
+                            </div>
+                        </div>
                     </div>
-                    <div>
-                        <Form>
-                        <Form.Group className="mb-3">
-                            <Form.Control type="number" placeholder="How much?" value={price} onChange={(e)=>setPrice(e.target.value)}/>
-                        </Form.Group>
-                        </Form>
-                        <Button variant="danger" size='lg' onClick={bid}>Bid now!</Button>
-                    </div>
-                </div>
             </Container>
-            <Container>
+            <Container className={styles.commentSection}>
                 <CommentList commentList={commentList}/>
                 <Form>
                     <Form.Group className="mb-3">
