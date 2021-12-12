@@ -1,10 +1,12 @@
-import BidItem from "./BidItem";
+import PostItem from './PostItem';
+import styles from '../styles/History.module.css'
 
 const MyPost = ({myPosts}) => {
     return (
-        <div>
+        <div className={styles.postList}>
+            <div className={styles.title}>Your posts</div>
             {myPosts.map((post)=>(
-                <BidItem key={post.postID} post={post}/>
+                <PostItem key={post.postID} post={post}/>
             ))}
         </div>
     );

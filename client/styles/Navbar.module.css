@@ -2,8 +2,9 @@
     float: right;
 }
 .navbar{
-    height: 40px;
-    background-color: grey;
+    height: 50px;
+    padding: 10px;
+    background-color: #4C4B63;
     overflow: hidden;
     color: white;
 }

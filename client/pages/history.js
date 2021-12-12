@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import Axios from "axios";
 import MyPost from "../components/MyPost"
 import MyBids from "../components/MyBids"
+import styles from '../styles/History.module.css';
 
 const History = () => {
     const [myBids,setMyBids] = useState([]);
@@ -28,9 +29,10 @@ const History = () => {
     return ( 
         <div>
             <Navbar/>
+            <div className={styles.history} >
             <MyPost myPosts={myPosts}/>
-            <br/>
             <MyBids myBids={myBids}/>
+            </div>
         </div>
      );
 }

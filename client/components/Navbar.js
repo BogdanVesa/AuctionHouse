@@ -52,7 +52,7 @@ const Navbar = () => {
 
 
     useEffect(() => {
-        if(localStorage.getItem("token") === ''){
+        if(localStorage.getItem("token") === undefined || localStorage.getItem("token") === '' ){
             router.push("/login")
         }
         else{

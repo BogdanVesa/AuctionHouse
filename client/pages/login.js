@@ -35,12 +35,15 @@ const Login = () => {
                     // what now?
                     if(err.response.data.message === "this account doesn't exist")
                     {
-                        alert("confirm your registration and try again!")
                         Axios.post("http://localhost:3001/auth/checkIfTemp",{
                             email : email,
                         }).then((response)=>{
-                            if(response.data === true)
+                            if(response.data === true){
                                 setShow(true)
+                            }
+                            else{
+                                alert("this account doesn't exist")
+                            }
                         }).catch((err)=>{
                             console.log(err);
                         })
