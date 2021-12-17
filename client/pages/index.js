@@ -1,4 +1,4 @@
-import styles from '../styles/Home.module.css'
+import styles from '../styles/Auction.module.css'
 import Navbar from '../components/Navbar'
 import SearchBar from '../components/SearchBar'
 import TagBid from '../components/TagBid'
@@ -6,12 +6,32 @@ import { useEffect } from 'react'
 import { useState } from 'react'
 import Axios from 'axios'
 import { Button } from 'react-bootstrap'
+import AuctionList from '../components/AuctionList'
+import { Offcanvas } from 'react-bootstrap'
+import TagList from '../components/TagList'
+import { Justify } from 'react-bootstrap-icons';
+
 
 export default function Home() {
+
+  const [width, setWidth]   = useState(1200);
+  const [height, setHeight] = useState("");
+  const updateDimensions = () => {
+      setWidth(window.innerWidth);
+      setHeight(window.innerHeight);
+  }
+
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
 
   useEffect(() => {
     getTaglist();
     getAllPosts();
+    window.addEventListener("resize", updateDimensions);
+    return () => window.removeEventListener("resize", updateDimensions);
   }, [])
 
   const [tagList,setTagList] = useState([]);
@@ -62,6 +82,8 @@ export default function Home() {
     }))
   }
 
+
+  if(width>1000){
   return (
     <div>
       <Navbar/>
@@ -70,4 +92,30 @@ export default function Home() {
       <TagBid tagList={tagList} postList={postList} onAdd={addTagPost} onRemove={removeTagPost}/>
     </div>
   )
+  }
+  else{
+    return(
+      <div>
+        <Navbar></Navbar>
+        <br/>
+        <SearchBar searchPost={searchPost}/>
+        <br/>
+
+        <Offcanvas className={styles.canvas} show={show} onHide={handleClose}>
+          <Offcanvas.Header closeButton>
+            <Offcanvas.Title>Tags</Offcanvas.Title>
+          </Offcanvas.Header>
+          <Offcanvas.Body variant='secondary'>
+            <TagList tagList={tagList} onAdd={addTagPost} onRemove={removeTagPost} />
+          </Offcanvas.Body>
+        </Offcanvas>
+        <div className={styles.auctionListSm}>
+        <Button variant="primary" onClick={handleShow}>
+          Tags <Justify/>
+        </Button>
+        <AuctionList postList={postList}/>
+        </div>
+      </div>
+    )
+  }
 }

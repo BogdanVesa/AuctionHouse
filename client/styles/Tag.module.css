@@ -7,7 +7,6 @@
   overflow: auto;
   background-color: #4C4B63;
   font-size: 20px;
-  font-family: 'Lucida Bright';
 }
 
 .tagList::-webkit-scrollbar {
@@ -42,7 +41,7 @@
     color: black;
     height: 10%;
     margin-bottom: 15px;
-    background-color: #E36D3B;
+    background-color: #b0c9d1;
     align-items: center;
 }
 .checkBox{

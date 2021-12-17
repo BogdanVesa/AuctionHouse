@@ -1,3 +1,4 @@
+import { Card } from "react-bootstrap";
 import styles from "../styles/Auction.module.css"
 import Auction from "./Auction";
 

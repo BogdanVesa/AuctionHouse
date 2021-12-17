@@ -21,8 +21,21 @@
     overflow: auto;
     background-color: #4C4B63;
     font-size: 17px;
-    font-family: 'Lucida Bright';
 }
+
+.auctionListSm{
+    height: 600px;
+    width: 97%;
+    margin: 60px auto;
+    padding: 0;
+    border-radius: 7px;
+    overflow: hidden;
+}
+
+.canvas{
+    background-color: #97ABB1;
+}
+
 .auction{
     border-style: solid;
     border-color: grey;
@@ -34,12 +47,12 @@
     color: black;
     height: 26%;
     margin-bottom: 15px;
-    background-color: #E36D3B;
+    background-color: #b0c9d1;
     transition: 0.3s;
 }
 .auction:hover{
     cursor: pointer;
-    background-color: #aa4013;
+    background-color: #798c92;
 }
 .picture{
     border-style: solid;
@@ -93,11 +106,11 @@
    
   /* Handle */
 .auctionList::-webkit-scrollbar-thumb {
-    background: #E36D3B; 
+    background: #b0c9d1; 
     border-radius: 10px;
   }
   
   /* Handle on hover */
 .auctionList::-webkit-scrollbar-thumb:hover {
-    background: #af491d; 
+    background: #798c92; 
   }
