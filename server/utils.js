@@ -10,6 +10,17 @@ const findByField = async (table,collumn,value) => {
         })
     })
 }
+const findOneOrFail = async (table,collumn,value) =>{
+    return new Promise((resolve, reject) =>{
+        db.query('SELECT * FROM ?? where ?? = ?',[table,collumn,value],(err,result)=>{
+            if(err)
+                reject(err);
+            if(!result || result.length<=0 || result.length>1)
+                reject("fail")
+            resolve(result[0]);
+        })
+    })
+}
 const insert = async (table,fields,values) =>{
     return new Promise((resolve, reject) =>{
          db.query('INSERT INTO ?? (??) values (?)',[table,fields,values],(err,result) =>{
@@ -136,6 +147,7 @@ const getCommentsWithUsername = async (postID)=>{
 
 const dateToCronExpression = (date)=>{
     date = new Date(date);
+    console.log(date);
     const min = date.getMinutes();
     const hour = date.getHours();
     const day = date.getDate();
@@ -145,4 +157,4 @@ const dateToCronExpression = (date)=>{
     return `${min} ${hour} ${day} ${month} ${dayOfWeek}`
 }
 
-module.exports={findByField,insert,getAllRows,getAllRowsWhere,deleteQueryBuilder,selectQueryBuilder,updateQueryBuilder,dateToCronExpression,getCommentsWithUsername}
+module.exports={findByField,insert,getAllRows,getAllRowsWhere,deleteQueryBuilder,selectQueryBuilder,updateQueryBuilder,dateToCronExpression,getCommentsWithUsername,findOneOrFail}
