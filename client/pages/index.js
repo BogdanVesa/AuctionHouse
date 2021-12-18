@@ -14,7 +14,7 @@ import { Justify } from 'react-bootstrap-icons';
 
 export default function Home() {
 
-  const [width, setWidth]   = useState(1200);
+  const [width, setWidth]   = useState("");
   const [height, setHeight] = useState("");
   const updateDimensions = () => {
       setWidth(window.innerWidth);
@@ -30,6 +30,7 @@ export default function Home() {
   useEffect(() => {
     getTaglist();
     getAllPosts();
+    setWidth(window.innerWidth);
     window.addEventListener("resize", updateDimensions);
     return () => window.removeEventListener("resize", updateDimensions);
   }, [])
@@ -82,6 +83,17 @@ export default function Home() {
     }))
   }
 
+  const searchPostSm =(name)=>{
+    Axios.get("http://localhost:3001/posts/getPosts",{params : {
+      description : name,
+      tags : addTag
+    }}).then((response =>{
+      console.log(response.data)
+      setPostList(response.data)
+      setAddTag([])
+    }))
+  }
+
 
   if(width>1000){
   return (
@@ -98,7 +110,7 @@ export default function Home() {
       <div>
         <Navbar></Navbar>
         <br/>
-        <SearchBar searchPost={searchPost}/>
+        <SearchBar searchPost={searchPostSm}/>
         <br/>
 
         <Offcanvas className={styles.canvas} show={show} onHide={handleClose}>

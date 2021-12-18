@@ -5,6 +5,7 @@ import Axios from "axios";
 import MyPost from "../components/MyPost"
 import MyBids from "../components/MyBids"
 import styles from '../styles/History.module.css';
+import { Button } from 'react-bootstrap';
 
 
 const History = () => {
@@ -13,12 +14,13 @@ const History = () => {
 
     useEffect(() => {
         getMyBids();
+        setWidth(window.innerWidth);
         window.addEventListener("resize", updateDimensions);
         return () => window.removeEventListener("resize", updateDimensions);
       }, [])
 
       const [width, setWidth]   = useState("");
-      const [height, setHeight] = useState();
+      const [height, setHeight] = useState("");
       const updateDimensions = () => {
           setWidth(window.innerWidth);
           setHeight(window.innerHeight);
@@ -36,6 +38,15 @@ const History = () => {
         })
     }
 
+    const [show, setShow]=useState(false)
+
+    const toShow =(e)=>{
+        e.preventDefault();
+        setShow(!show);
+    }
+
+
+    if(width>1000){
     return ( 
         <div>
             <Navbar/>
@@ -45,6 +56,20 @@ const History = () => {
             </div>
         </div>
      );
+    }
+    else{
+        return(
+            <div>
+                <Navbar/>
+                <div className={styles.historySm}>
+                <Button onClick={toShow}>Show my post</Button>
+                <Button onClick={toShow}>Show my bids</Button>
+                {show === false ? <MyPost myPosts={myPosts}/> :
+                <MyBids myBids={myBids}/>}
+                </div>
+            </div>
+        )
+    }
 }
  
 export default History;

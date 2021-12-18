@@ -8,6 +8,7 @@ import {useRouter} from 'next/router';
 import { useEffect } from "react";
 import Link from 'next/link';
 import Modal from 'react-bootstrap/Modal';
+import { Col, Row } from 'react-bootstrap';
 
 
 const Login = () => {
@@ -110,13 +111,18 @@ const Login = () => {
                     <Form.Label className = {styles.label}>Password</Form.Label>
                     <Form.Control type="password" placeholder="Password" value={password} onChange={(e)=>setPassword(e.target.value) }/>
                 </Form.Group>
-                <Form.Group className="mb-3" controlId="formBasicCheckbox">
-                    <Form.Check type="checkbox" label="Check me out" />
-                </Form.Group>
+                <Row>
+                    <Col sm={8}>
                 <Button variant="primary" type="submit" >
                     Submit
                 </Button>
-                <Link href="/register">Register here</Link>
+                </Col>
+                <Col sm={4}>
+                    <div className={styles.right}>
+                    <Link href="/register">Register here</Link>
+                    </div>
+                </Col>
+                </Row>
             </Form>
             <Modal
         show={show}

@@ -136,7 +136,6 @@ const createPost = () => {
                 <div className={styles.picture}>
                     <div>
                         <input type="file" name="pic" onChange={handlerImage}/>
-                        <Button variant="success" size="sm" onClick={showPicture}>Add picture</Button>{' '}
                     </div>
                     <div className={styles.picturePreview}>
                         <img className={styles.showPicture} src={picture}/>

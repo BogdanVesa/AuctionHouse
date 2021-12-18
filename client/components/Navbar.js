@@ -7,6 +7,8 @@ import { useEffect } from "react";
 import Axios from 'axios';
 import {useRouter} from 'next/router';
 import styles from "../styles/Navbar.module.css"
+import { DropdownButton } from "react-bootstrap";
+import { Dropdown } from "react-bootstrap";
 
 
 const Navbar = () => {
@@ -50,35 +52,72 @@ const Navbar = () => {
         })
     }
 
+    const [width, setWidth]   = useState(1200);
+    const [height, setHeight] = useState("");
+    const updateDimensions = () => {
+        setWidth(window.innerWidth);
+        setHeight(window.innerHeight);
+    }
+
 
     useEffect(() => {
         if(localStorage.getItem("token") === undefined || localStorage.getItem("token") === '' ){
             router.push("/login")
         }
         else{
-            getUsername();    
+            getUsername();
+            setWidth(window.innerWidth);
+            window.addEventListener("resize", updateDimensions);
+            return () => window.removeEventListener("resize", updateDimensions);    
         }
       }, [])
 
+    
+
+    if(width>1000){
     return (
         <div className={styles.navbar}>
             <Container>
         <Row >
             <Col md={8}>      
-                <Button variant="success" size="sm" onClick={toHome}>Home</Button>{' '}
-                <Button variant="success" size="sm" onClick={toHistory}>Your bids</Button>{' '}
-                <Button variant="success" size="sm" onClick={toCreatePost}>Create bid</Button>{' '}
+                <Button size="sm" onClick={toHome}>Home</Button>{' '}
+                <Button size="sm" onClick={toHistory}>Your bids</Button>{' '}
+                <Button size="sm" onClick={toCreatePost}>Create bid</Button>{' '}
             </Col>
             <Col md={4}>
                 {username}
                 <div className={styles.nav}>
-                <Button variant="success" size="sm" onClick={addBalance}>Balance ${balance}</Button>{' '}
+                <Button size="sm" onClick={addBalance}>Balance ${balance}</Button>{' '}
                 </div>
             </Col>
         </Row>
         </Container>
         </div>
      );
+    }
+    else{
+        return(
+            <div className={styles.navbar}>
+                <Container>
+                    <Row>
+                        <Col sm>
+                        <DropdownButton title="Menu">
+                            <Dropdown.Item eventKey="1" onClick={toHome}>Home</Dropdown.Item>
+                            <Dropdown.Item eventKey="2" onClick={toHistory}>History</Dropdown.Item>
+                            <Dropdown.Item eventKey="3" onClick={toCreatePost}>Create auction</Dropdown.Item>
+                        </DropdownButton>
+                        </Col>
+                        <Col sm>
+                        {username}
+                        </Col>
+                        <Col sm>
+                        <Button size="sm" onClick={addBalance}>Balance ${balance}</Button>{' '}
+                        </Col>
+                    </Row>
+                </Container>
+            </div>
+        );
+    }
 }
  
 export default Navbar;
