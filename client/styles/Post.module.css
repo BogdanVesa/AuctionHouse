@@ -107,13 +107,13 @@
    
   /* Handle */
 .commentList::-webkit-scrollbar-thumb {
-    background: #E36D3B; 
+    background: #b0c9d1;  
     border-radius: 10px;
   }
   
   /* Handle on hover */
 .commentList::-webkit-scrollbar-thumb:hover {
-    background: #af491d; 
+    background: #798c92;  
   }
 .comment{
     border-style: solid;
@@ -171,11 +171,11 @@
    
   /* Handle */
   .tagList::-webkit-scrollbar-thumb {
-    background: #E36D3B; 
+    background: #b0c9d1; 
     border-radius: 10px;
   }
   
   /* Handle on hover */
   .tagList::-webkit-scrollbar-thumb:hover {
-    background: #af491d; 
+    background: #798c92; 
   }
