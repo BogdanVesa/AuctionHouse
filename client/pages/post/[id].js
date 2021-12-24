@@ -84,7 +84,7 @@ const Details = ({post}) => {
             // setPicture(URL.createObjectURL(response));
             setPicture(URL.createObjectURL(response.data));
         }).catch((err)=>{
-            console.log(err);
+            console.log(err.response.data.message);
         })
     }
 
@@ -103,7 +103,7 @@ const Details = ({post}) => {
                 console.log(response);
             }
             catch(err){
-                alert(err)
+                alert(err.response.data.message)
             }
         }
     }

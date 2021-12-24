@@ -61,7 +61,7 @@ const Navbar = () => {
 
 
     useEffect(() => {
-        if(localStorage.getItem("token") === undefined || localStorage.getItem("token") === '' ){
+        if(localStorage.getItem("token") === null || localStorage.getItem("token") === '' ){
             router.push("/login")
         }
         else{
@@ -81,8 +81,8 @@ const Navbar = () => {
         <Row >
             <Col md={8}>      
                 <Button size="sm" onClick={toHome}>Home</Button>{' '}
-                <Button size="sm" onClick={toHistory}>Your bids</Button>{' '}
-                <Button size="sm" onClick={toCreatePost}>Create bid</Button>{' '}
+                <Button size="sm" onClick={toHistory}>History</Button>{' '}
+                <Button size="sm" onClick={toCreatePost}>Create auction</Button>{' '}
             </Col>
             <Col md={4}>
                 {username}
