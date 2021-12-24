@@ -39,5 +39,30 @@ const validateBidData =  (req,res,next) =>{
     else
         next();
 }
+const checkIfPostExists =  async (req,res,next) =>{
+    let id;
+    id=req.body?.postID;
+    if(!id)
+        id=req.params?.postID;
+    if(!id)
+        res.status(400).json("post id was missing from request");
+    else
+    {
+        const post = await utils.checkIfRowExists("post",[{operator:"=",field:"postID",value:id}])
+        if(post)
+            next();
+        else
+            res.status(400).json({message:"post was not found"});
 
-module.exports = {validateBidData}
+    }
+}
+
+const validateCommentData = (req,res,next) => {
+    if(req.body?.content === undefined || req.body.content.length < 5 || req.body.content.trim() === "")
+        res.status(400).json({message:"comment was to short or invalid"})
+    else
+        next();
+}
+
+
+module.exports = {validateBidData,checkIfPostExists,validateCommentData}

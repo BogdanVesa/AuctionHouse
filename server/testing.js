@@ -1,0 +1,6 @@
+if(1)
+    console.log("da")
+if(0)
+    console.log("nu")
+if(5)
+    console.log("poate")

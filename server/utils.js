@@ -101,6 +101,13 @@ const queryBuilderHelper = (conditions,chainOperator="AND") =>{
     }
     return sql;
 }
+// }
+const getPostsWithTags =  async (conditions=[])=>{
+    let sql = `SELECT post.postID, currentPrice, endTime, description,createdAt, group_concat(tag SEPARATOR ',')as tags FROM post INNER JOIN post_tags on post.postID = post_tags.postID`
+    sql+=queryBuilderHelper(conditions);
+    sql+=" GROUP BY post.postID";
+    return promiseFromQuery(sql);
+}
 
 
 const selectQueryBuilder = async (table,fields,conditions=[],chainOperator="AND") =>{
@@ -130,31 +137,33 @@ const updateQueryBuilder = async (table,valuePairs,conditions, chainOperator="AN
 }
 
 const getCommentsWithUsername = async (postID)=>{
-    return new Promise((resolve,reject) =>{
-        var sql = `select commentID,comment.userID,content,username,createdAt from comment inner join user on comment.userID = user.UserID where comment.postID = ${postID}`
+    var sql = `select commentID,comment.userID,content,username,createdAt from comment inner join user on comment.userID = user.UserID where comment.postID = ${postID}`
+    return promiseFromQuery(sql);
+} 
+const checkIfRowExists = async (table,conditions=[],chainOperator="AND")=>{
+    let sql="SELECT EXISTS (SELECT * FROM "+db.escapeId(table);
+    sql+=queryBuilderHelper(conditions,chainOperator);
+    sql+=") as existance"
+    return new Promise((resolve,reject)=>{
         db.query(sql,(err,result)=>{
             if(err)
-            {
-                console.log(err);
-                reject(err);
-            }
-            resolve(result);
+                reject(false)
+            if(result[0].existance)
+                resolve(true);
+            resolve(false);
         })
-    })    
-} 
-
+    })
+}
 
 
 const dateToCronExpression = (date)=>{
     date = new Date(date);
-    console.log(date);
     const min = date.getMinutes();
     const hour = date.getHours();
     const day = date.getDate();
     const month = date.getMonth()+1;
     const dayOfWeek = date.getDay();
-    console.log(`${min} ${hour} ${day} ${month} ${dayOfWeek}`);
     return `${min} ${hour} ${day} ${month} ${dayOfWeek}`
 }
 
-module.exports={findByField,insert,getAllRows,getAllRowsWhere,deleteQueryBuilder,selectQueryBuilder,updateQueryBuilder,dateToCronExpression,getCommentsWithUsername,findOneOrFail}
+module.exports={findByField,insert,getAllRows,getAllRowsWhere,deleteQueryBuilder,selectQueryBuilder,updateQueryBuilder,dateToCronExpression,getCommentsWithUsername,findOneOrFail,checkIfRowExists,getPostsWithTags}
