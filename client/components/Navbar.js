@@ -72,7 +72,10 @@ const Navbar = () => {
         }
       }, [])
 
-    
+    const logOff =(e)=>{
+        e.preventDefault();
+        router.push('/login')
+    }
 
     if(width>1000){
     return (
@@ -88,6 +91,7 @@ const Navbar = () => {
                 {username}
                 <div className={styles.nav}>
                 <Button size="sm" onClick={addBalance}>Balance ${balance}</Button>{' '}
+                <Button size="sm" variant='danger' onClick={logOff}>Log out</Button>
                 </div>
             </Col>
         </Row>

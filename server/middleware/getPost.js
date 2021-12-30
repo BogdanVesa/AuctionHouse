@@ -7,10 +7,11 @@ const addPostToBody = async (req,res,next) =>{
     if(id)
     {
         try{
-            const post= await utils.findOneOrFail("post","postID",req.body.postID)
+            const post= await utils.findOneOrFail("post","postID",id)
             req.post=post;
             next();          
         }catch(err){
+            console.log(err);
             res.status(400).json({message:"the post doesn't exist"})
         }
     }

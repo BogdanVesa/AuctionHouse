@@ -136,7 +136,6 @@ const getAllPosts = async (req,res) => {
              return listsHaveIntersection(post.tags,params.tags)
         })
     }
-    console.log(posts);
     res.status(200).json(posts);
 }
 

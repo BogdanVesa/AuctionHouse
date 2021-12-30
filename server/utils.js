@@ -15,6 +15,7 @@ const findOneOrFail = async (table,collumn,value) =>{
         db.query('SELECT * FROM ?? where ?? = ?',[table,collumn,value],(err,result)=>{
             if(err)
                 reject(err);
+            console.log(result)
             if(!result || result.length<=0 || result.length>1)
                 reject("fail")
             resolve(result[0]);

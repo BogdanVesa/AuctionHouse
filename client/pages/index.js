@@ -10,6 +10,7 @@ import AuctionList from '../components/AuctionList'
 import { Offcanvas } from 'react-bootstrap'
 import TagList from '../components/TagList'
 import { Justify } from 'react-bootstrap-icons';
+import { useRouter } from 'next/router'
 
 
 export default function Home() {
@@ -21,6 +22,8 @@ export default function Home() {
       setHeight(window.innerHeight);
   }
 
+  const router = useRouter();
+
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
@@ -28,11 +31,23 @@ export default function Home() {
 
 
   useEffect(() => {
-    getTaglist();
-    getAllPosts();
-    setWidth(window.innerWidth);
-    window.addEventListener("resize", updateDimensions);
-    return () => window.removeEventListener("resize", updateDimensions);
+    const token = localStorage.getItem("token")
+    console.log(token)
+    if(token === null || token === '' ){
+      router.push("/login")
+      console.log(
+        "redirected"
+      );
+    }else{
+      console.log(
+        "worked"
+      );
+      getTaglist();
+      getAllPosts();
+      setWidth(window.innerWidth);
+      window.addEventListener("resize", updateDimensions);
+      return () => window.removeEventListener("resize", updateDimensions);
+    }
   }, [])
 
   const [tagList,setTagList] = useState([]);
