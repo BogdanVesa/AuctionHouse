@@ -179,3 +179,70 @@
   .tagList::-webkit-scrollbar-thumb:hover {
     background: #798c92; 
   }
+
+  @media screen and (max-width: 1000px) {
+    .post{
+        margin-top: 29px;
+        height: 1230px;
+        display: flex;
+        flex-direction: column;
+        padding: 15px 15px 15px 15px;
+        border-style: solid;
+        border-color: grey;
+        border-radius: 10px;
+        overflow: auto;
+        background-color: #4C4B63;
+        font-size: 12px;
+        /* font-family: 'Lucida Bright'; */
+        color: black;
+        align-content: center;
+        align-items: center;
+        justify-content: flex-start;
+    }
+    .details{
+        width: 100%;
+        height: 70%;
+    }
+    .description{
+        display: flex;
+        padding: 20px;
+        background-color: #b0c9d1;
+        border-radius: 10px;
+        height: 33%;
+        width: 100%;
+        font-size: 19px;
+    }
+    .alignRow{
+        height: 67%;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        row-gap: 80px;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .tagList{
+        width: 60%;
+        height: 41%;
+        padding: 15px 15px 15px 15px;
+        border-radius: 10px;
+        overflow: auto;
+        background-color: #4C4B63;
+        font-size: 16px;
+    }
+    .picture{
+        height: 30%;
+        width: 86%;
+        align-self: center;
+        border-style: solid;
+        border-color: grey;
+        border-radius: 10px;
+    }
+    .priceDate{
+        width: 80%;
+    }
+    .bid{
+        width: 80%;
+    }
+  
+}

@@ -8,3 +8,7 @@
     /* overflow: auto; */
     color: white;
 }
+.align{
+    display: flex;
+    justify-content: space-between;
+}

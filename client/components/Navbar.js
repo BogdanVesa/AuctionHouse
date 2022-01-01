@@ -102,23 +102,23 @@ const Navbar = () => {
     else{
         return(
             <div className={styles.navbar}>
-                <Container>
-                    <Row>
-                        <Col sm>
+                <div className={styles.align}>
+                    <div>
                         <DropdownButton title="Menu">
                             <Dropdown.Item eventKey="1" onClick={toHome}>Home</Dropdown.Item>
                             <Dropdown.Item eventKey="2" onClick={toHistory}>History</Dropdown.Item>
                             <Dropdown.Item eventKey="3" onClick={toCreatePost}>Create auction</Dropdown.Item>
+                            <Dropdown.Divider />
+                            <Dropdown.Item eventKey="4" onClick={logOff}>Log out</Dropdown.Item>
                         </DropdownButton>
-                        </Col>
-                        <Col sm>
+                        </div>
+                        <div>
                         {username}
-                        </Col>
-                        <Col sm>
+                        </div>
+                        <div>
                         <Button size="sm" onClick={addBalance}>Balance ${balance}</Button>{' '}
-                        </Col>
-                    </Row>
-                </Container>
+                        </div>
+                </div>
             </div>
         );
     }

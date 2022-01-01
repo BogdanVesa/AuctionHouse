@@ -12,6 +12,24 @@
     font-size: 12px;
     color: white;
 }
+.createSm{
+    margin-top: 40px;
+    max-height: 645px;
+    display: flex;
+    flex-direction: column;
+    padding: 15px 15px 15px 15px;
+    border-style: solid;
+    border-color: grey;
+    border-radius: 10px;
+    overflow: auto;
+    background-color: #4C4B63;
+    font-size: 12px;
+    color: white;
+    align-items: center;
+}
+.description{
+    width: 100%;
+}
 .tagList{
     height: 236px;
     width: 20%;
@@ -42,6 +60,26 @@
     background: #798c92;  
   }
 
+.createSm::-webkit-scrollbar {
+    width: 10px;
+  }
+  
+  /* Track */
+.createSm::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 20px #6765a5; 
+    border-radius: 10px;
+  }
+   
+  /* Handle */
+.createSm::-webkit-scrollbar-thumb {
+    background: #b0c9d1; 
+    border-radius: 10px;
+  }
+  
+  /* Handle on hover */
+.createSm::-webkit-scrollbar-thumb:hover {
+    background: #798c92;  
+  }
 
 
 .tagItem{
@@ -81,6 +119,15 @@
     flex-direction: row;
     justify-content: space-between;
 }
+.alignCol{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-content: space-between;
+    justify-content: center;
+    align-items: center;
+
+}
 .picture{
     display: flex;
     align-self: center;
@@ -88,12 +135,12 @@
     height: 236px;
     width: 40%;
     padding: 15px;
+    justify-content: space-between;
 }
 .picturePreview{
     border-style: solid;
     border-color: grey;
     border-radius: 10px;
-    margin-left: auto;
     width: 62%;
     height: 84%;
 }
@@ -101,4 +148,34 @@
     border-radius: 10px;
     width: 100%;
     height: 100%;
+}
+@media screen and (max-width: 1000px) {
+    .tagList{
+        height: 236px;
+        width: 60%;
+        padding: 15px 15px 15px 15px;
+        overflow: auto;
+        background-color: #4C4B63;
+        border-radius: 10px;
+        font-size: 15px;
+    }
+    .picture{
+        display: flex;
+        flex-direction: column;
+        align-self: center;
+        align-items: center;
+        height: 236px;
+        width: 80%;
+        padding: 15px;
+    }
+    .picturePreview{
+    border-style: solid;
+    border-color: grey;
+    border-radius: 10px;
+    width: 62%;
+    height: 84%;
+}
+    .price{
+        width: 50%;
+    }
 }

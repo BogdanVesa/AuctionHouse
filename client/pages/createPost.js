@@ -111,10 +111,27 @@ const createPost = () => {
         e.preventDefault();
         console.log(file);
     }
+
+    const [width, setWidth]   = useState("");
+    const [height, setHeight] = useState("");
+    const updateDimensions = () => {
+        setWidth(window.innerWidth);
+        setHeight(window.innerHeight);
+    }
+
+
     useEffect(() => {
         getTaglist();
+        setWidth(window.innerWidth);
+        window.addEventListener("resize", updateDimensions);
+        return () => window.removeEventListener("resize", updateDimensions);
       }, [])
 
+
+
+    
+
+    if(width>1000){
     return (
         <div>
             <Navbar></Navbar>
@@ -164,8 +181,61 @@ const createPost = () => {
             </div>
             </Container>
         </div>
-
       );
+    }
+    else
+    {
+        return(
+            <div>
+                <Navbar/>
+                <div className={styles.createSm}>
+            <Form className={styles.description}>
+                <Form.Group className="mb-3">
+                    <Form.Label>Description</Form.Label>
+                    <Form.Control as="textarea" rows={3} onChange={(e)=>setDescription(e.target.value)} />
+                </Form.Group>
+            </Form>
+            <Form className={styles.price}>
+                <Form.Group className="mb-3">
+                    <Form.Label>Price</Form.Label>
+                    <Form.Control type="number" placeholder="Price" onChange={(e)=>setPrice(e.target.value)}/>
+                </Form.Group>
+            </Form>
+            <div className={styles.alignCol}>
+                <TagCreateList tagList={tagList} onAdd={addTagPost} onRemove={removeTagPost}/>
+                <div className={styles.picture}>
+                    <div>
+                        <input type="file" name="pic" onChange={handlerImage}/>
+                    </div>
+                    <div className={styles.picturePreview}>
+                        <img className={styles.showPicture} src={picture}/>
+                    </div>
+                </div>
+                <div className={styles.date}>
+                    <div>
+                        Ends at:
+                        <DatePicker
+                        filterDate={d => {
+                        return d > subDays(new Date(),1)
+                        }}
+                        filterTime={filterPassedTime}
+                        placeholderText="Select End Date"
+                        showTimeSelect
+                        timeIntervals={1}
+                        dateFormat="dd/MM/yyyy h:mmaa"
+                        selected={endDate}
+                        startDate={startDate}
+                        onChange={date => setEndDate(date)}/>
+                    </div>
+                    <div>
+                        <Button variant="success" size="sm" onClick={sumbitPost}>Submit</Button>{' '}
+                    </div>
+                </div>
+                </div>
+            </div>
+            </div>
+        );
+    }
 }
  
 export default createPost;
